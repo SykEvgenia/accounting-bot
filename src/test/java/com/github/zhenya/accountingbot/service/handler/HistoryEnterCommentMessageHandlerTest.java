@@ -86,6 +86,7 @@ class HistoryEnterCommentMessageHandlerTest {
     @NotNull
     private Account getAccount() {
         Account account = new Account();
+        account.setId(123L);
         account.setSum(80L);
         return account;
     }
@@ -93,7 +94,7 @@ class HistoryEnterCommentMessageHandlerTest {
     @NotNull
     private History getHistory() {
         History history = new History();
-        history.setAccountId(123L);
+        history.setAccount(getAccount());
         history.setSum(35L);
         return history;
     }

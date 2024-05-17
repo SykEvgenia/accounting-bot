@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class ViewComponent {
 
     public SendMessage getErrorMessage(Long chatId) {
-        return new SendMessage(chatId, "Помилка, розпочніть створення спочатку");
+        return new SendMessage(chatId, "Сталась помилка");
     }
 
     public SendMessage getValueIntMessage(Long chatId) {

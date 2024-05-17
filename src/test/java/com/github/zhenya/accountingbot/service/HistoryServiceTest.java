@@ -2,7 +2,9 @@ package com.github.zhenya.accountingbot.service;
 
 import com.github.zhenya.accountingbot.cache.Cache;
 import com.github.zhenya.accountingbot.constant.Status;
+import com.github.zhenya.accountingbot.entity.Account;
 import com.github.zhenya.accountingbot.entity.History;
+import com.github.zhenya.accountingbot.repository.AccountRepository;
 import com.github.zhenya.accountingbot.repository.HistoryRepository;
 import com.github.zhenya.accountingbot.view.ViewComponent;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -15,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static com.github.zhenya.accountingbot.constant.Status.ENTER_HISTORY_SUM;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,6 +36,9 @@ class HistoryServiceTest {
     private HistoryRepository historyRepository;
     @Mock
     private ViewComponent viewComponent;
+
+    @Mock
+    private AccountRepository accountRepository;
 
     @InjectMocks
     private HistoryService service;
@@ -58,12 +64,13 @@ class HistoryServiceTest {
     @Test
     void createHistory() {
         when(viewComponent.getHistorySumMessage(123456L)).thenReturn(new SendMessage(123456L, ""));
+        when(accountRepository.findById(12L)).thenReturn(Optional.ofNullable(Account.builder().id(12L).build()));
 
         SendMessage sendMessage = service.createHistory(12L, 123456L);
 
         assertNotNull(sendMessage);
         verify(cache).putHistory(eq(123456L), historyCaptor.capture());
-        assertEquals(12L, historyCaptor.getValue().getAccountId());
+        assertEquals(12L, historyCaptor.getValue().getAccount().getId());
         verify(cache).putStatus(eq(123456L), statusCaptor.capture());
         assertEquals(ENTER_HISTORY_SUM, statusCaptor.getValue());
     }
