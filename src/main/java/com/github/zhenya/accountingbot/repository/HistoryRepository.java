@@ -8,4 +8,6 @@ import java.util.List;
 public interface HistoryRepository extends JpaRepository<History, Long> {
 
     List<History> findAllByAccountId(Long id);
+
+    void deleteAllByAccountId(Long accountId);
 }

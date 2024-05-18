@@ -3,12 +3,14 @@ package com.github.zhenya.accountingbot.service;
 import com.github.zhenya.accountingbot.cache.Cache;
 import com.github.zhenya.accountingbot.entity.Account;
 import com.github.zhenya.accountingbot.repository.AccountRepository;
+import com.github.zhenya.accountingbot.repository.HistoryRepository;
 import com.github.zhenya.accountingbot.view.ViewComponent;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static com.github.zhenya.accountingbot.constant.Status.ENTER_ACCOUNT_NAME;
@@ -19,6 +21,7 @@ import static com.github.zhenya.accountingbot.constant.Status.ENTER_ACCOUNT_NAME
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final HistoryRepository historyRepository;
     private final Cache cache;
     private final ViewComponent viewComponent;
 
@@ -49,7 +52,9 @@ public class AccountService {
         return viewComponent.getAccountMessage(account, chatId);
     }
 
+    @Transactional
     public SendMessage deleteAccount(Long accountId, Long chatId) {
+        historyRepository.deleteAllByAccountId(accountId);
         accountRepository.deleteById(accountId);
         return getAccounts(chatId);
     }

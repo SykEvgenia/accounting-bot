@@ -3,7 +3,6 @@ package com.github.zhenya.accountingbot.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 
 @Entity
 @Table(name = "account")
